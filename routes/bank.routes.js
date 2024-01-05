@@ -5,6 +5,8 @@ import {
     deactivate,
     deposit,
     filter,
+    getAllActiveUsers,
+    getAllInActiveUsers,
     getAllUsers,
     getUserById,
     transfer,
@@ -32,7 +34,11 @@ router.put("/transfer", transfer);
 router.put("/activate/:id", activate);
 // deactivate user by id
 router.put("/deactivate/:id", deactivate);
-// filter users by balance or cash or credit
+// filter active users by balance or cash or credit
 router.get("/filter/by", filter);
+// get all active users
+router.get("/users/active", getAllActiveUsers);
+// get all Inactive users
+router.get("/users/inactive", getAllInActiveUsers);
 
 export default router;

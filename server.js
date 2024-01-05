@@ -5,6 +5,7 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import { errorHandler } from "./middlewares/errorMiddleware.js";
 import bankRoutes from "./routes/bank.routes.js";
+import apiInfo from "./routes/bankApiInfo.routes.js";
 dotenv.config();
 
 const app = express();
@@ -12,6 +13,8 @@ const app = express();
 app.use(cors());
 
 app.use(express.json());
+
+app.use("/api/v1", apiInfo);
 
 app.use("/api/v1/bank", bankRoutes);
 

@@ -193,36 +193,38 @@ const deactivate = async (req, res, next) => {
 };
 const filter = async (req, res, next) => {
     try {
-        const { filterType, min, max } = req.query;
+        let { filterType, min, max } = req.query;
+        if (isNaN(min)) min = BANK_CONSTANTS.MINIMUM_AMOUNT;
+        if (isNaN(max)) max = Number.MAX_SAFE_INTEGER;
         let filteredUsers;
         switch (filterType) {
             case "balance":
-                filteredUsers = await User.aggregate([
-                    {
-                        $addFields: {
-                            totalFunds: { $add: ["$cash", "$credit"] }, // Calculate total funds
-                        },
-                    },
-                    {
-                        $match: {
-                            totalFunds: {
-                                $gte: min,
-                                $lte: max,
-                            }, // Filter by total funds range
-                            isActive: true, // Filter by isActive field
-                        },
-                    },
-                ]);
+                const users = await User.find();
+                filteredUsers = users.filter(
+                    (user) =>
+                        user.credit + user.cash >= min &&
+                        user.credit + user.cash <= max
+                );
+                // filteredUsers = User.find({
+                //     $expr: {
+                //         $and: [
+                //             { $gte: [{ $add: ["$cash", "$credit"] }, min] },
+                //             { $lte: [{ $add: ["$cash", "$credit"] }, max] },
+                //         ],
+                //     },
+                // });
                 break;
             case "cash":
-                console.log("cash switch");
-                filteredUsers = await User.find()
+                filteredUsers = await User.find({ isActive: true })
                     .where("cash")
                     .gte(min)
                     .lte(max);
                 break;
             case "credit":
-                filteredUsers = await User.where("credit").gte(min).lte(max);
+                filteredUsers = await User.find({ isActive: true })
+                    .where("credit")
+                    .gte(min)
+                    .lte(max);
                 break;
 
             default:
@@ -234,13 +236,57 @@ const filter = async (req, res, next) => {
         next(error);
     }
 };
-// const getAllUsers = async(req,res,next)=>{
-//     try {
+const getAllActiveUsers = async (req, res, next) => {
+    try {
+        const users = await User.find({ isActive: true });
+        if (!users || !users.length) {
+            res.status(STATUS_CODE.NOT_FOUND).send("No active users");
+        }
+        res.send(users);
+    } catch (error) {
+        next(error);
+    }
+};
+const getAllInActiveUsers = async (req, res, next) => {
+    try {
+        const users = await User.find({ isActive: false });
+        if (!users || !users.length) {
+            res.status(STATUS_CODE.NOT_FOUND);
+            throw new Error("No inactive users");
+        } else {
+            res.send(users);
+        }
+    } catch (error) {
+        next(error);
+    }
+};
 
-//     } catch (error) {
-//         next(error);
-//     }
-// }
+const getAPIInfo = (req, res, next) => {
+    res.send({
+        getAllUsers: "GET /api/v1/bank - Shows All Users Info",
+        getAllActiveUsers:
+            "GET /api/v1/bank/users/active - Shows All Active Users",
+        getAllInActiveUsers:
+            "GET /api/v1/bank/users/inactive - Shows All Inactive Users",
+        createUser: "POST /api/v1/bank - Creates New User",
+        getUserById: "GET /api/v1/bank/:id - Shows User Info",
+        deposit: "PUT /api/v1/bank/deposit/:id - Deposit Money To User's Cash",
+        updateCredit:
+            "PUT /api/v1/bank/update-credit/:id - Update User's Credit",
+        withdraw:
+            "PUT /api/v1/bank/withdraw/:id - Withdraw Money From User's Account",
+        transfer:
+            "PUT /api/v1/bank/transfer - Transfer Money Between Bank Accounts",
+        activate: "PUT /api/v1/bank/activate/:id - Activates User",
+        deactivate: "PUT /api/v1/bank/deactivate/:id - Deactivates User",
+        filterActiveUsersByBalance:
+            "GET /api/v1/bank/filter/by?filterType=balance&min=MinAmount&max=MaxAmount - Shows Active Users with Given Balance",
+        filterActiveUsersByCash:
+            "GET /api/v1/bank/filter/by?filterType=cash&min=MinAmount&max=MaxAmount - Shows Active Users with Given Cash",
+        filterActiveUsersByCredit:
+            "GET /api/v1/bank/filter/by?filterType=credit&min=MinAmount&max=MaxAmount - Shows Active Users with Given Credit",
+    });
+};
 
 export {
     getAllUsers,
@@ -253,4 +299,7 @@ export {
     activate,
     deactivate,
     filter,
+    getAllActiveUsers,
+    getAllInActiveUsers,
+    getAPIInfo,
 };
