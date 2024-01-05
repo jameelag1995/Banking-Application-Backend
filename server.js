@@ -10,16 +10,22 @@ dotenv.config();
 
 const app = express();
 
+// cors middleware
 app.use(cors());
 
+// json parsing middleware
 app.use(express.json());
 
+// API Info middleware
 app.use("/api/v1", apiInfo);
 
+// routes middleware
 app.use("/api/v1/bank", bankRoutes);
 
+// error handler middleware
 app.use(errorHandler);
 
+// Connect DB and Run Server
 const PORT = process.env.PORT || 3000;
 connectDB().then(() => {
     app.listen(PORT, () => {
