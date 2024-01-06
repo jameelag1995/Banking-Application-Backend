@@ -261,9 +261,39 @@ const getAllInActiveUsers = async (req, res, next) => {
     }
 };
 
+const getUserByEmail = async (req, res, next) => {
+    try {
+        const email = req.query.email;
+        const user = await User.find({ email });
+        if (!user) {
+            res.status(STATUS_CODE.NOT_FOUND);
+            throw new Error("Email doesn't exist!");
+        }
+        res.send(user);
+    } catch (error) {
+        next(error);
+    }
+};
+
+const deleteUserById = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const deletedUser = await User.deleteOne({ _id: id });
+        if (!deleteUserById) {
+            res.status(STATUS_CODE.NOT_FOUND);
+            throw new Error("No such user");
+        }
+        res.send(deletedUser);
+    } catch (error) {
+        next(error);
+    }
+};
+
 const getAPIInfo = (req, res, next) => {
     res.send({
         getAllUsers: "GET /api/v1/bank - Shows All Users Info",
+        getUserByEmail:
+            "GET /api/v1/user/by-email - return user with given email query",
         getAllActiveUsers:
             "GET /api/v1/bank/users/active - Shows All Active Users",
         getAllInActiveUsers:
@@ -279,6 +309,7 @@ const getAPIInfo = (req, res, next) => {
             "PUT /api/v1/bank/transfer - Transfer Money Between Bank Accounts",
         activate: "PUT /api/v1/bank/activate/:id - Activates User",
         deactivate: "PUT /api/v1/bank/deactivate/:id - Deactivates User",
+        deleteUserById: "DELETE /api/v1/bank/delete/:id - Delete User",
         filterActiveUsersByBalance:
             "GET /api/v1/bank/filter/by?filterType=balance&min=MinAmount&max=MaxAmount - Shows Active Users with Given Balance",
         filterActiveUsersByCash:
@@ -290,6 +321,7 @@ const getAPIInfo = (req, res, next) => {
 
 export {
     getAllUsers,
+    getUserByEmail,
     getUserById,
     createUser,
     deposit,
@@ -302,4 +334,5 @@ export {
     getAllActiveUsers,
     getAllInActiveUsers,
     getAPIInfo,
+    deleteUserById,
 };

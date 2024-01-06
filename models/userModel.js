@@ -4,7 +4,7 @@ const userSchema = mongoose.Schema(
     {
         userId: {
             type: String,
-            required: true,
+            required: [true, "ID must be a 9-digit number."],
             unique: true,
             validate: {
                 validator: function (userId) {
@@ -12,7 +12,7 @@ const userSchema = mongoose.Schema(
                     return /^\d{9}$/.test(userId);
                 },
                 message: (props) =>
-                    `${props.value} is not a valid userId. It must be a 9-digit number.`,
+                    `${props.value} is not a valid userId. This ID already Exists .`,
             },
         },
         firstName: {
@@ -24,6 +24,10 @@ const userSchema = mongoose.Schema(
             type: String,
             minlength: [1, "Last name must include one letter at least"],
             required: true,
+        },
+        isAdmin: {
+            type: Boolean,
+            default: false,
         },
         email: {
             type: String,
@@ -62,7 +66,6 @@ const userSchema = mongoose.Schema(
         timestamps: true,
     }
 );
-
 
 userSchema.virtual("balance").get(function () {
     return this.cash + this.credit;

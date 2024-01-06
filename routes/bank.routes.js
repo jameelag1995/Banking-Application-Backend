@@ -3,11 +3,13 @@ import {
     activate,
     createUser,
     deactivate,
+    deleteUserById,
     deposit,
     filter,
     getAllActiveUsers,
     getAllInActiveUsers,
     getAllUsers,
+    getUserByEmail,
     getUserById,
     transfer,
     updateCredit,
@@ -18,6 +20,8 @@ const router = express.Router();
 
 // display all users
 router.get("/", getAllUsers);
+// return user info by email
+router.get("/user/by-email", getUserByEmail);
 // returns user info by id
 router.get("/:id", getUserById);
 // create new user
@@ -40,5 +44,6 @@ router.get("/filter/by", filter);
 router.get("/users/active", getAllActiveUsers);
 // get all Inactive users
 router.get("/users/inactive", getAllInActiveUsers);
-
+// delete user by id
+router.delete("/delete/:id", deleteUserById);
 export default router;
