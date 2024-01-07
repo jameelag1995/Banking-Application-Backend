@@ -12,7 +12,7 @@ const userSchema = mongoose.Schema(
                     return /^\d{9}$/.test(userId);
                 },
                 message: (props) =>
-                    `${props.value} is not a valid userId. This ID already Exists .`,
+                    `${props.value} is not a valid userId. ID must be a 9-digit number." .`,
             },
         },
         firstName: {
@@ -46,6 +46,15 @@ const userSchema = mongoose.Schema(
             type: String,
             required: true,
             minlength: [8, "Password must be at least 8 characters"],
+            validate: {
+                validator: function (value) {
+                    const passwordRegex = /^.{8,}$/;
+
+                    const isValidPassword = passwordRegex.test(value);
+                    return isValidPassword;
+                },
+                message: "Password must be at least 8 characters",
+            },
         },
         cash: {
             type: Number,
