@@ -15,7 +15,6 @@ import {
     updateCredit,
     withdraw,
 } from "../controller/bankController.js";
-import cors from "cors";
 const router = express.Router();
 
 // display all users
@@ -25,14 +24,7 @@ router.get("/user/by-email", getUserByEmail);
 // returns user info by id
 router.get("/:id", getUserById);
 // create new user
-router.post(
-    "/",
-    cors({
-        origin: "https://radiant-moxie-80f7c1.netlify.app",
-        optionsSuccessStatus: 200,
-    }),
-    createUser
-);
+router.post("/", createUser);
 // update user cash
 router.put("/deposit/:id", deposit);
 // update user credit

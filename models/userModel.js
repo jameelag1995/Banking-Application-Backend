@@ -45,17 +45,18 @@ const userSchema = mongoose.Schema(
         password: {
             type: String,
             required: true,
-            validate: {
-                validator: function (value) {
-                    if (value.length < 8) {
-                        throw new Error(
-                            "Password must be at least 8 chars long"
-                        );
-                    }
-                    return value;
-                },
-                message: "Password must be at least 8 characters",
-            },
+            minlength: [8, "maybe this will work!"],
+            // validate: {
+            //     validator: function (value) {
+            //         if (value.length < 8) {
+            //             throw new Error(
+            //                 "Password must be at least 8 chars long"
+            //             );
+            //         }
+            //         return value;
+            //     },
+            //     message: "Password must be at least 8 characters",
+            // },
         },
         cash: {
             type: Number,
@@ -77,7 +78,4 @@ const userSchema = mongoose.Schema(
     }
 );
 
-userSchema.virtual("balance").get(function () {
-    return this.cash + this.credit;
-});
 export const User = mongoose.model("users", userSchema);
