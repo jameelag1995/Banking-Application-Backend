@@ -13,7 +13,8 @@ const app = express();
 // cors middleware
 app.use(
     cors({
-        origin: "*",
+        origin: "https://radiant-moxie-80f7c1.netlify.app",
+        credentials: true, // Allow cookies and HTTP authentication to be sent with the request
     })
 );
 
