@@ -11,7 +11,14 @@ dotenv.config();
 const app = express();
 
 // cors middleware
-app.use(cors());
+app.use(
+    cors({
+        origin: "https://radiant-moxie-80f7c1.netlify.app/",
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+        allowedHeaders: ["my-custom-header"],
+        credentials: true,
+    })
+);
 
 // json parsing middleware
 app.use(express.json());
