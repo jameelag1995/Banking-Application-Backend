@@ -31,7 +31,7 @@ const createUser = async (req, res, next) => {
             res.status(STATUS_CODE.BAD_REQUEST);
             throw new Error("Password must be at least 8 characters");
         }
-        if (req.body.userId.length < 9) {
+        if (req.body.userId.length !== 9) {
             res.status(STATUS_CODE.BAD_REQUEST);
             throw new Error("ID must be at least 9 digits");
         }
