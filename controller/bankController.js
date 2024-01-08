@@ -31,10 +31,10 @@ const validateEmail = (email) => {
 };
 const createUser = async (req, res, next) => {
     try {
-        if (req.body.password.length < 8) {
-            res.status(STATUS_CODE.BAD_REQUEST);
-            throw new Error("Password must be at least 8 characters");
-        }
+        // if (req.body.password.length < 8) {
+        //     res.status(STATUS_CODE.BAD_REQUEST);
+        //     throw new Error("Password must be at least 8 characters");
+        // }
         if (req.body.userId.length !== 9) {
             res.status(STATUS_CODE.BAD_REQUEST);
             throw new Error("ID must be at least 9 digits");
@@ -46,7 +46,7 @@ const createUser = async (req, res, next) => {
         const user = await User.create(req.body);
         res.status(STATUS_CODE.CREATED).send(user);
     } catch (error) {
-        console.log(error);
+        
         next(error);
     }
 };
