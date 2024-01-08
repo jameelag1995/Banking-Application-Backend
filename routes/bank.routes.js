@@ -25,7 +25,14 @@ router.get("/user/by-email", getUserByEmail);
 // returns user info by id
 router.get("/:id", getUserById);
 // create new user
-router.post("/", cors(), createUser);
+router.post(
+    "/",
+    cors({
+        origin: "https://radiant-moxie-80f7c1.netlify.app",
+        optionsSuccessStatus: 200,
+    }),
+    createUser
+);
 // update user cash
 router.put("/deposit/:id", deposit);
 // update user credit
