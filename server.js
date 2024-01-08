@@ -14,9 +14,6 @@ const app = express();
 app.use(
     cors({
         origin: "https://radiant-moxie-80f7c1.netlify.app",
-        methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-        // allowedHeaders: ["my-custom-header"],
-        credentials: true,
     })
 );
 
