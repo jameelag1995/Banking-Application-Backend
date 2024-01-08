@@ -45,18 +45,18 @@ const userSchema = mongoose.Schema(
         password: {
             type: String,
             required: true,
-            minlength: [8, "maybe this will work!"],
-            // validate: {
-            //     validator: function (value) {
-            //         if (value.length < 8) {
-            //             throw new Error(
-            //                 "Password must be at least 8 chars long"
-            //             );
-            //         }
-            //         return value;
-            //     },
-            //     message: "Password must be at least 8 characters",
-            // },
+            minlength: 8,
+            validate: {
+                validator: function (value) {
+                    if (value.length < 8) {
+                        throw new Error(
+                            "Password must be at least 8 chars long"
+                        );
+                    }
+                    return value;
+                },
+                message: "Password must be at least 8 characters",
+            },
         },
         cash: {
             type: Number,
