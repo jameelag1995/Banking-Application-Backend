@@ -13,7 +13,7 @@ const app = express();
 // cors middleware
 app.use(
     cors({
-        origin: "https://radiant-moxie-80f7c1.netlify.app",
+        origin: "*",
     })
 );
 
