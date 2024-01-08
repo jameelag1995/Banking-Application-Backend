@@ -23,7 +23,7 @@ app.use("/api/v1", apiInfo);
 app.use("/api/v1/bank", bankRoutes);
 
 // error handler middleware
-app.use(errorHandler);
+app.use(cors(), errorHandler);
 
 // Connect DB and Run Server
 const PORT = process.env.PORT || 3000;
